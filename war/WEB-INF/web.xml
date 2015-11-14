@@ -15,7 +15,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>Exercise3</servlet-name>
-		<servlet-class>com.myorg.javacourse.Exercise3</servlet-class>
+		<servlet-class>org.mta.javacourse.Exercise3</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Exercise3</servlet-name>
