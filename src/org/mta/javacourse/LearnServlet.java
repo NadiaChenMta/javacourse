@@ -2,7 +2,7 @@ package org.mta.javacourse;
 
 import java.io.IOException;
 import javax.servlet.http.*;
-// we can do import to the class And it is super
+// we can do import to the class And it is hot
 
 @SuppressWarnings("serial")
 public class LearnServlet extends HttpServlet {
