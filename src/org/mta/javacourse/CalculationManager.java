@@ -1,36 +1,57 @@
 package org.mta.javacourse;
 
 public class CalculationManager {
-	private static double RADIUS = 50;
-	private static double HYPOTENUSE = 50;
-	private static double ANGLE = 30;
-	private static double BASE = 20;
-	private static double EXP = 13;
 	
+	private double radius;
 	private double area;
+	private double angleB;
+	private double hypotenuse;
 	private double opposite;
-	private double powerRes;
+	private double base;
+	private double exp;
+	private double resPower;
+	
+	public CalculationManager(){
+		radius = 50;
+		angleB = 30;
+		hypotenuse = 50;  
+		base=20;
+		exp=13;
 		
-	public double getArea(double radius) {
-		area = Math.PI * Math.pow(radius, 2);
+	}
+	public double areaOfCircle(){
+		
+		area = Math.pow(radius, 2) * Math.PI;
 		return area;
 	}
 	
-	public double getOpposite(double hypotenuse, double angle) {
-		opposite = Math.sin(angle * Math.PI / 180) * hypotenuse;
+	public double calcOpposite() {
+		opposite = Math.toRadians(angleB) * hypotenuse;
 		return opposite;
 	}
 	
-	public double getPower(double base, double exp) {
-		powerRes = Math.pow(base, exp);
-		return powerRes;
+	public double calcPower() {
+	
+		resPower=Math.pow(base, exp);
+		return resPower;
+	
 	}
-
+	
+	
 	public String getResults() {
-		String line1 = new String("1. The area of a circle with radius " + RADIUS + " is " + getArea(RADIUS));
-		String line2 = new String("2. The lenght of opposite where angle B is " + ANGLE + " and hypotenuse is " + HYPOTENUSE + " is " + getOpposite(HYPOTENUSE, ANGLE));
-		String line3 = new String("1. Power of " + BASE + " with exponent of " + EXP + " is " + getPower(BASE, EXP));
 		
-		return line1 + "<br>" + line2 + "<br>" + line3;
-	}	
+		String resultStr;
+		
+		String line1 = new String("1. Area of circle with radius "+radius+ " is "+areaOfCircle())+ " square cm";
+		String line2 = new String("2. Length of opposite where angle B is "+ angleB+" degrees and Hypotenuse length is "+hypotenuse+ " cm is "+calcOpposite());
+		String line3 = new String("3. Power of " +base+" with exp of "+exp+" is "+calcPower());
+		
+		resultStr = line1 + "<br>" + line2 + "<br>" + line3;		
+		return resultStr;	
+	}
+	
+			
+		
+			
 }
+
