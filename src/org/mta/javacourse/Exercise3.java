@@ -2,7 +2,6 @@ package org.mta.javacourse;
 
 import java.io.IOException;
 import javax.servlet.http.*;
-import java.lang.Object;
 import java.lang.String;
 
 @SuppressWarnings("serial")
