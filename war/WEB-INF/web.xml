@@ -23,15 +23,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>StockDetailsServle</servlet-name>
+		<servlet-name>StockDetailsServlet</servlet-name>
 		<servlet-class>org.mta.javacourse.StockDetailsServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>StockDetailsServlet</servlet-name>
 		<url-pattern>/StockDetailsServlet</url-pattern>
 	</servlet-mapping>
-	
-	
 	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
