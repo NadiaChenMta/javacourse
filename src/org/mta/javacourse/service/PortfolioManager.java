@@ -5,14 +5,22 @@ import java.util.Date;
 import org.mta.javacourse.model.Portfolio;
 import org.mta.javacourse.model.Stock;
 
+/**
+ * An instance of this class represents PortfolioManager.
+ * 
+ * @author Chen Mualem & Nadia Medvedovsky
+ * @since 2015
+ * @date 7/12/15
+ */
 public class PortfolioManager {
 
 	int i;
 	Portfolio portfolio1 = new Portfolio();
 
+	
 	/**
-	 * 
-	 * @return
+	 * create a new portfolio and set all values.
+	 * @return portfolio object
 	 */
 	public Portfolio getPortfolio() {
 		Calendar c = Calendar.getInstance();
@@ -28,8 +36,6 @@ public class PortfolioManager {
 		portfolio1.addStock(stock3);
 
 		portfolio1.setTitle("Portfolio #1");
-
-		portfolio1.getStocks();
 
 		return portfolio1;
 	}

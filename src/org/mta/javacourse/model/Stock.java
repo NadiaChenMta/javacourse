@@ -4,6 +4,24 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+/**
+ * An instance of this class represents a stock.
+ * #Variables:
+ * symbol(string), ask(int), bid(int), date(Date).
+ * #C'tors:
+ * 1. public Stock() 
+ * 2. public Stock(String symbol, Float ask, Float bid, Date date)- overloading
+ * 3. public Stock(String symbol, Float ask, Float bid)- overloading for copy c'tor. can't get date(mutable)
+ * 4. public Stock(Stock stock) - copy of stock 
+ * #Methods:
+ * 1. getters and setters
+ * 2. public String dateToStr(Date date)
+ * 3. public String getHtmlDescription()
+ * 
+ * @author Chen Mualem & Nadia Medvedovsky
+ * @since 2015
+ * @date 7/12/15
+ */
 public class Stock {
 	public static final int BUY = 0;
 	public static final int SELL = 1;
@@ -60,7 +78,7 @@ public class Stock {
 	 */
 	public Stock(Stock stock) {
 		this(stock.getSymbol(), stock.getAsk(), stock.getBid()); // immutable
-		this.date = new java.util.Date(stock.getDate().getTime()); // mmutable
+		this.date = new java.util.Date(stock.getDate().getTime()); // mutable
 	}
 
 	public String getSymbol() {
@@ -106,7 +124,12 @@ public class Stock {
 		sDate = df.format(date);
 		return sDate;
 	}
+	
 
+	/**
+	 * creates String with the stock data.
+	 * @return String
+	 */
 	public String getHtmlDescription() {
 		String resString = "<b>Stock symbol</b>: " + getSymbol() + "<b> Ask</b>: " + getAsk() + "<b> Bid</b>: "
 				+ getBid() + "<b> Date</b>: " + dateToStr(date) + "<br>";

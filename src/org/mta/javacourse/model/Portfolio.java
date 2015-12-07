@@ -1,6 +1,24 @@
 package org.mta.javacourse.model;
 
 
+/**
+ * An instance of this class represents portfolio that contains stocks.
+ * #Variables:
+ * title(string), i(int), portfolioSize(int), stocks[](stock array).
+ * #C'tors:
+ * 1. public Portfolio()
+ * 2. public Portfolio(Portfolio portfolio) - copy of portfolio
+ * #Methods:
+ * 1. getters and setters
+ * 2. public void addStock(Stock stock)
+ * 3. public void removeStock(int stockNum)
+ * 4. public void changeStockBid(int stockNum, float bid)
+ * 5. public String getHtmlPortfolio()
+ * 
+ * @author Chen Mualem & Nadia Medvedovsky
+ * @since 2015
+ * @date 7/12/15
+ */
 public class Portfolio {
 	public static final int MAX_PORTFOLIO_SIZE=5;
 	private String title;
@@ -27,7 +45,7 @@ public class Portfolio {
 		this.title = portfolio.getTitle();
 		this.portfolioSize = portfolio.portfolioSize;
 		
-		for(int i = 0; i < portfolio.portfolioSize ; i++){
+		for(i = 0; i < portfolio.portfolioSize ; i++){
 			stocks[i] = new Stock((portfolio.stocks[i]));
 		}
 		
@@ -72,7 +90,7 @@ public class Portfolio {
 	}
 	
 	/**
-	 * change a stock "bid" value.
+	 * change a stock bid value.
 	 * @param stockNum
 	 * @param bid
 	 */
@@ -80,10 +98,9 @@ public class Portfolio {
 		stocks[stockNum-1].setBid(bid);
 	}
 	
-	
 	/**
-	 * print the protfolio's stocks details.
-	 * @return
+	 * creates String with all the protfolio's stocks data.
+	 * @return String
 	 */
 	public String getHtmlPortfolio(){	
 		String getHtmlPortfolio = " <h1> Portfolio Title: " +getTitle()+" </h1>";
@@ -94,5 +111,4 @@ public class Portfolio {
 
 		return getHtmlPortfolio;
 	}
-
 }
