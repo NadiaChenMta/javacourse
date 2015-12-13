@@ -1,7 +1,8 @@
 package org.mta.javacourse.model;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -28,64 +29,39 @@ public class Stock {
 	private String symbol;
 	private float ask;
 	private float bid;
-	private Date date;
-	private int stockQuantity;
+	private Date outputDate;
+	private Calendar cal;
+	private int stockQuantity=0;
 	private static enum ALGO_RECOMMENDATION{BUY,SELL,REMOVE,HOLD};
 	private ALGO_RECOMMENDATION recommendation;
-	
-	
+		
 	/**
 	 * constructor
-	 */
-	public Stock()
-	{
-		date = new java.util.Date();
-		symbol = "unknown";
-		stockQuantity=0;
-	}
-
-	/**
-	 * overloading constructor
 	 * 
 	 * @param symbol
 	 * @param ask
 	 * @param bid
 	 * @param date
-	 * @param stockQuantity
 	 */
-	public Stock(String symbol, Float ask, Float bid, Date date) 
-	{
-		setSymbol(symbol);
-		setAsk(ask);
-		setBid(bid);
+	public Stock(String symbol, float ask, float bid, String date) {
+		this.symbol=symbol;
+		this.ask = ask;
+		this.bid=bid;
+		outputDate = new Date(); 
+		cal = Calendar.getInstance();
 		setDate(date);
-		stockQuantity=0;
 	}
-
-	/**
-	 * overloading constructor
-	 * 
-	 * @param symbol
-	 * @param ask
-	 * @param bid
-	 */
-	public Stock(String symbol, Float ask, Float bid, int stockQuantity) {
-		setSymbol(symbol);
-		setAsk(ask);
-		setBid(bid);
-		updateStockQuantity(stockQuantity);
-	}
-
+	
 	/**
 	 * copy constructor
 	 * 
 	 * @param stock
 	 */
 	public Stock(Stock stock) {
-		this(stock.getSymbol(), stock.getAsk(), stock.getBid(), stock.getstockQuantity()); // immutable
-		this.date = new java.util.Date(stock.getDate().getTime()); // mutable
+		this(stock.getSymbol(),stock.getAsk(), stock.getBid(),stock.getFormattedDate(stock.getDate()));
+		this.stockQuantity = stock.getstockQuantity();
 	}
-
+		
 	//getters and setters
 	public String getSymbol() {
 		return symbol;
@@ -111,12 +87,30 @@ public class Stock {
 		this.bid = bid;
 	}
 
-	public Date getDate() {
-		return date;
+	/**
+	 * @param inputDate
+	 */
+	public void setDate(String inputDate) {		
+		SimpleDateFormat formatedDate = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+		    	this.outputDate = formatedDate.parse(inputDate);
+		    } catch (ParseException e) {
+		    	e.printStackTrace();
+		    }
+		cal.setTime(outputDate);
 	}
-
-	public void setDate(java.util.Date date) {
-		this.date = date;
+	
+	public Date getDate() {
+		return outputDate;
+	}
+	
+	/**
+	 * @param outputDate
+	 * @return
+	 */
+	public String getFormattedDate(Date outputDate) {
+		SimpleDateFormat formatedCal = new SimpleDateFormat("MM/dd/yyyy");
+		return formatedCal.format(cal.getTime());
 	}
 	
 	public int getstockQuantity() {
@@ -132,38 +126,26 @@ public class Stock {
 	}
 	
 	/**
-	 * add to stock quantity. if 0 set stock quantity to 0
+	 * add to stock quantity(buying and selling stocks).
+	 * if 0 set stock quantity to 0.
 	 * @param stockQuantity
 	 */
 	public void updateStockQuantity(int stockQuantity) {
-		if(stockQuantity == 0)
+		if(stockQuantity == Portfolio.ALL_STOCKS)
 		{
 			this.stockQuantity=0;
 		}
 		else
 		this.stockQuantity += stockQuantity;
 	}
-	
-	/**
-	 * convert date to string format.
-	 * 
-	 * @return date as a string
-	 */	
-	public String dateToStr(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		String sDate;
-		sDate = df.format(date);
-		return sDate;
-	}
-
-	
+		
 	/**
 	 * creates String with the stock data.
 	 * @return String
 	 */
 	public String getHtmlDescription() {
 		String resString = "<b>Stock symbol</b>: " + getSymbol() + "<b> Ask</b>: " + getAsk() + "<b> Bid</b>: "
-				+ getBid() + "<b> Date</b>: " + dateToStr(date) + "<b> Quantity</b>: " + getstockQuantity() +"<br>";
+				+ getBid() + "<b> Date</b>: " + getFormattedDate(outputDate) + "<b> Quantity</b>: " + getstockQuantity() +"<br>";
 		return resString;
 	}
 
