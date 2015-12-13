@@ -15,29 +15,37 @@ import org.mta.javacourse.model.Stock;
 public class PortfolioManager {
 
 	int i;
-	Portfolio portfolio1 = new Portfolio();
-
+	Portfolio myPortfolio = new Portfolio();
 	
 	/**
-	 * create a new portfolio and set all values.
+	 * create a new portfolio and set all values. 
 	 * @return portfolio object
 	 */
 	public Portfolio getPortfolio() {
 		Calendar c = Calendar.getInstance();
-		c.set(2014, 11, 15);
+		c.set(2015, 12, 4);
 		Date date = c.getTime();
 
-		Stock stock1 = new Stock("PIH", (float) 13.1, (float) 12.4, date);
-		Stock stock2 = new Stock("AAL", (float) 5.78, (float) 5.5, date);
-		Stock stock3 = new Stock("CAAS", (float) 32.2, (float) 31.5, date);
-
-		portfolio1.addStock(stock1);
-		portfolio1.addStock(stock2);
-		portfolio1.addStock(stock3);
-
-		portfolio1.setTitle("Portfolio #1");
-
-		return portfolio1;
+		myPortfolio.setTitle("Exercise 7 portfolio");
+		myPortfolio.updateBalance(10000);
+		
+		Stock stock1 = new Stock("PIH", (float) 10.0, (float) 8.5, date);
+		Stock stock2 = new Stock("AAL", (float) 30.0, (float) 25.5 , date);
+		Stock stock3 = new Stock("CAAS", (float) 20.0, (float) 15.5, date);
+		
+		myPortfolio.addStock(stock1);
+		myPortfolio.addStock(stock2);
+		myPortfolio.addStock(stock3);
+				
+		myPortfolio.buyStock(stock1,20);
+		myPortfolio.buyStock(stock2,30);
+		myPortfolio.buyStock(stock3,40);
+		
+		myPortfolio.sellStock("AAL", Portfolio.ALL_STOCKS);
+		myPortfolio.removeStock("CAAS");
+		
+		
+		return myPortfolio;
 	}
 
 }
