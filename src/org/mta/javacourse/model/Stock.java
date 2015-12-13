@@ -47,6 +47,7 @@ public class Stock {
 		this.symbol=symbol;
 		this.ask = ask;
 		this.bid=bid;
+		//date is immutable, so it must be created anew. 
 		outputDate = new Date(); 
 		cal = Calendar.getInstance();
 		setDate(date);
