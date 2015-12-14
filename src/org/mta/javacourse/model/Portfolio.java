@@ -3,11 +3,18 @@ package org.mta.javacourse.model;
 /**
  * An instance of this class represents portfolio that contains stocks.
  * 
- * #Variables: title(string), i(int), portfolioSize(int), stocks[](stock array).
- * #C'tors: 1. public Portfolio() 2. public Portfolio(Portfolio portfolio) -
- * copy of portfolio #Methods: 1. getters and setters 2. public void
- * addStock(Stock stock) 3. public void removeStock(int stockNum) 4. public void
- * changeStockBid(int stockNum, float bid) 5. public String getHtmlPortfolio()
+ * #Variables: 
+ * title(string), i(int), portfolioSize(int), stocks[](stock array).
+ * #C'tors: 
+ * 1. public Portfolio() 
+ * 2. public Portfolio(Portfolio portfolio) - copy of portfolio
+ * 
+ * #Methods: 
+ * 1. getters and setters
+ * 2. public void  addStock(Stock stock)
+ * 3. public void removeStock(int stockNum)
+ * 4. public void changeStockBid(int stockNum, float bid) 
+ * 5. public String getHtmlPortfolio()
  * 
  * @author Chen Mualem & Nadia Medvedovsky
  * @since 2015
@@ -118,19 +125,21 @@ public class Portfolio {
 	 * @return if action succeeded or not.
 	 */
 	public boolean removeStock(String symbol) {
-		for (i = 0; i < portfolioSize; i++) {
+		for(i=0; i< portfolioSize ; i++) {
 			if (stocks[i].getSymbol().equals(symbol)) {
 				sellStock(symbol, ALL_STOCKS);
-				// remove by overriding
-				for (; i < portfolioSize-1; i++) {
-					stocks[i] = stocks[i + 1];
+				
+				// remove by overriding. the last stock still appear twice and must be deleted after.
+				for (int j = i; j < portfolioSize -1 ; j++) {
+					stocks[j] = stocks[j + 1];
 				}
+				stocks[portfolioSize-1]=null;
 				portfolioSize--;
-				System.out.println("The stock " + stocks[i].getSymbol() + " was removed from portfolio.");
+				System.out.println("The stock " + symbol + " was removed from portfolio.");
 				return true;
 			}
 		}
-		System.out.println("The stock " + stocks[i].getSymbol() + " doesn't exist in portfolio.");
+		System.out.println("The stock " + symbol + " doesn't exist in portfolio.");
 		return false;
 	}
 
@@ -145,10 +154,10 @@ public class Portfolio {
 	 * @return if action succeeded or not.
 	 */
 	public boolean sellStock(String symbol, int quantity) {
-		float currentQuantity = 0;
+		int currentQuantity = 0;
 		float profit = 0;
-
-		for (i = 0; i < portfolioSize; i++) {
+				
+		for(i=0; i< portfolioSize ; i++) {
 			if (stocks[i].getSymbol().equals(symbol)) {
 				if (quantity == ALL_STOCKS) {
 					currentQuantity = stocks[i].getStockQuantity();
@@ -173,7 +182,8 @@ public class Portfolio {
 				}
 			}
 		}
-		System.out.println("The stock" + stocks[i].getSymbol() + " doesn't exist in portfolio.");
+
+		System.out.println("The stock " + symbol + " doesn't exist in portfolio.");
 		return false;
 	}
 
@@ -199,7 +209,7 @@ public class Portfolio {
 			return false;
 		}
 		if (totalPrice > balance) {
-			System.out.println("not enough money in your balnce. can't buy a stock");
+			System.out.println("can't buy the stock-not enough balance to complete purchase.");
 			return false;
 		}
 
@@ -208,14 +218,15 @@ public class Portfolio {
 			quantity = (int) (balance / stock.getAsk());
 		}
 
-		// Case 2: the stock exists-add quantity.
-		for (i = 0; i < portfolioSize; i++) {
+		// Case 2: the stock exists-add quantity. deal with extreme cases: 
+		while(stocks[i]!=null || i==MAX_PORTFOLIO_SIZE){
 			if (stocks[i].getSymbol().equals(stock.getSymbol())) {
 				stocks[i].updateStockQuantity(quantity);
-				updateBalance(-totalPrice);
 				System.out.println("Added " + quantity + " to " + stocks[i].getSymbol() + " stock.");
+				updateBalance(-totalPrice);
 				return true;
 			}
+			i++;
 		}
 
 		// Case 3: stock not in portfolio-add new.
@@ -234,11 +245,15 @@ public class Portfolio {
 	 * @param bid
 	 */
 	public void changeStockBid(int stockNum, float bid) {
-		stocks[stockNum - 1].setBid(bid);
+			if (stocks[stockNum - 1]!= null) {
+				stocks[stockNum - 1].setBid(bid);
+			}
+			System.out.println("Bid changed");
+			
 	}
 
 	/**
-	 * the value of stocks in the market.
+	 * the total value of stocks in the market.
 	 * 
 	 * @return float
 	 */

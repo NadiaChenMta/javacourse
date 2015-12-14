@@ -98,11 +98,19 @@ public class Stock {
 	}
 
 	public void setAsk(float ask) {
+		if(bid < 0){
+			System.out.println("Ask can't be negetive.");
+		} else {
 		this.ask = ask;
+		}
 	}
 
 	public void setBid(float bid) {
+		if(bid < 0){
+			System.out.println("Bid can't be negetive.");
+		} else {
 		this.bid = bid;
+		}
 	}
 
 	/**
