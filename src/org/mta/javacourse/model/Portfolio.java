@@ -12,9 +12,11 @@ package org.mta.javacourse.model;
  * #Methods: 
  * 1. getters and setters
  * 2. public void  addStock(Stock stock)
- * 3. public void removeStock(int stockNum)
- * 4. public void changeStockBid(int stockNum, float bid) 
- * 5. public String getHtmlPortfolio()
+ * 3. public boolean buyStock(Stock stock, int quantity)
+ * 4. public void removeStock(int stockNum)
+ * 5. public boolean sellStock(String symbol, int quantity)
+ * 6. public void changeStockBid(int stockNum, float bid) 
+ * 7. public String getHtmlPortfolio()
  * 
  * @author Chen Mualem & Nadia Medvedovsky
  * @since 2015
@@ -24,10 +26,10 @@ public class Portfolio {
 	public static final int MAX_PORTFOLIO_SIZE = 5;
 	public static final int ALL_STOCKS = -1;
 	private String title;
-	private int i;
 	private float balance;
 	private Stock[] stocks;
 	private int portfolioSize;
+	public enum ALGO_RECOMMENDATION {BUY, SELL, REMOVE, HOLD};
 
 	/**
 	 * constructor
@@ -49,7 +51,7 @@ public class Portfolio {
 		this.title = portfolio.getTitle();
 		this.portfolioSize = portfolio.portfolioSize;
 
-		for (i = 0; i < portfolio.portfolioSize; i++) {
+		for (int i = 0; i < portfolio.portfolioSize; i++) {
 			stocks[i] = new Stock((portfolio.stocks[i]));
 		}
 	}
@@ -100,20 +102,76 @@ public class Portfolio {
 	 * @param stock
 	 */
 	public void addStock(Stock stock) {
-		i = 0;
-		while (stocks[i] != null) {
+		
+		
+		if (portfolioSize == MAX_PORTFOLIO_SIZE) {
+			System.out.println("Can't add new stock, portfolio can only have " + MAX_PORTFOLIO_SIZE + " stocks.");
+			return;
+		}
+		
+		for(int i = 0;i<portfolioSize; i++){
 			if (stocks[i].getSymbol().equals(stock.getSymbol())) {
 				System.out.println("Stock " + stocks[i].getSymbol() + " already exists.");
 				return;
 			}
-			if (portfolioSize == MAX_PORTFOLIO_SIZE) {
-				System.out.println("Can't add new stock, portfolio can only have " + MAX_PORTFOLIO_SIZE + " stocks.");
-				return;
-			}
-			i++;
 		}
 		stocks[portfolioSize] = stock;
 		portfolioSize++;
+	}
+
+	/**
+	 * the process of buying stocks:
+	 * 1. calculate price(quantity*ask).
+	 * *if it's not in portfolio-add it using addStock().
+	 * 2. increase the stock's quantity.
+	 * 3. decrease balance with price.
+	 * 
+	 * @param stock
+	 * @param quantity
+	 * @return if action succeeded or not.
+	 */
+	public boolean buyStock(Stock stock, int quantity) {
+		float totalPrice;
+		int i=0;
+		totalPrice = quantity * stock.getAsk();
+		
+		// Check if valid quantity
+		if (quantity <= 0) {
+			System.out.println("can't buy a negative number of stocks");
+			return false;
+		}
+		if (totalPrice > balance) {
+			System.out.println("can't buy the stock-not enough balance to complete purchase.");
+			return false;
+		}
+	
+		// calculate maximum quantity you can buy.
+		if (quantity == ALL_STOCKS) {
+			quantity = (int) (balance / stock.getAsk());
+		}
+	
+		// Case 2: the stock exists-add quantity.
+		for(;i<portfolioSize; i++){
+			if (stocks[i].getSymbol().equals(stock.getSymbol())) {
+				stocks[i].updateStockQuantity(quantity);
+				System.out.println("Added " + quantity + " to " + stocks[i].getSymbol() + " stock.");
+				updateBalance(-totalPrice);
+				return true;
+			}
+		}
+			
+		// Case 3: stock not in portfolio-add new.
+		addStock(stock);
+		
+		if (i == MAX_PORTFOLIO_SIZE) {
+			return false;
+		}
+		
+		stocks[i].updateStockQuantity(quantity);
+		System.out.println("added " + stocks[i].getSymbol() + " to portfolio with " + quantity + " stocks. you paid "
+				+ totalPrice + "$.");
+		updateBalance(-totalPrice);
+		return true;
 	}
 
 	/**
@@ -125,7 +183,7 @@ public class Portfolio {
 	 * @return if action succeeded or not.
 	 */
 	public boolean removeStock(String symbol) {
-		for(i=0; i< portfolioSize ; i++) {
+		for(int i=0; i< portfolioSize ; i++) {
 			if (stocks[i].getSymbol().equals(symbol)) {
 				sellStock(symbol, ALL_STOCKS);
 				
@@ -157,7 +215,7 @@ public class Portfolio {
 		int currentQuantity = 0;
 		float profit = 0;
 				
-		for(i=0; i< portfolioSize ; i++) {
+		for(int i=0; i< portfolioSize ; i++) {
 			if (stocks[i].getSymbol().equals(symbol)) {
 				if (quantity == ALL_STOCKS) {
 					currentQuantity = stocks[i].getStockQuantity();
@@ -188,68 +246,16 @@ public class Portfolio {
 	}
 
 	/**
-	 * the process of buying stocks:
-	 * 1. calculate price(quantity*ask).
-	 * *if it's not in portfolio-add it using addStock().
-	 * 2. increase the stock's quantity.
-	 * 3. decrease balance with price.
-	 * 
-	 * @param stock
-	 * @param quantity
-	 * @return if action succeeded or not.
-	 */
-	public boolean buyStock(Stock stock, int quantity) {
-		float totalPrice;
-
-		totalPrice = quantity * stock.getAsk();
-		
-		// Check if valid quantity
-		if (quantity <= 0) {
-			System.out.println("can't buy a negative number of stocks");
-			return false;
-		}
-		if (totalPrice > balance) {
-			System.out.println("can't buy the stock-not enough balance to complete purchase.");
-			return false;
-		}
-
-		// calculate maximum quantity you can buy.
-		if (quantity == ALL_STOCKS) {
-			quantity = (int) (balance / stock.getAsk());
-		}
-
-		// Case 2: the stock exists-add quantity. deal with extreme cases: 
-		while(stocks[i]!=null || i==MAX_PORTFOLIO_SIZE){
-			if (stocks[i].getSymbol().equals(stock.getSymbol())) {
-				stocks[i].updateStockQuantity(quantity);
-				System.out.println("Added " + quantity + " to " + stocks[i].getSymbol() + " stock.");
-				updateBalance(-totalPrice);
-				return true;
-			}
-			i++;
-		}
-
-		// Case 3: stock not in portfolio-add new.
-		addStock(stock);
-		stocks[i].updateStockQuantity(quantity);
-		System.out.println("added " + stocks[i].getSymbol() + " to portfolio with " + quantity + " stocks. you paid "
-				+ totalPrice + "$.");
-		updateBalance(-totalPrice);
-		return true;
-	}
-
-	/**
 	 * the market value(bid) of stock can change.
 	 * 
 	 * @param stockNum
 	 * @param bid
 	 */
 	public void changeStockBid(int stockNum, float bid) {
-			if (stocks[stockNum - 1]!= null) {
+			if (stocks[stockNum - 1]!= null && bid>0) {
 				stocks[stockNum - 1].setBid(bid);
 			}
-			System.out.println("Bid changed");
-			
+			System.out.println("Bid changed");		
 	}
 
 	/**
@@ -259,8 +265,8 @@ public class Portfolio {
 	 */
 	public float getStocksValue() {
 		int sum = 0;
-		for (i = 0; i < portfolioSize; i++) {
-			sum += stocks[i].getStockQuantity() * stocks[i].getAsk();
+		for (int i = 0; i < portfolioSize; i++) {
+			sum += stocks[i].getStockQuantity() * stocks[i].getBid();
 		}
 		return sum;
 	}
@@ -284,7 +290,7 @@ public class Portfolio {
 				+ getTotalValue() + "$<br>" + "<b>Total Stocks value:</b> " + getStocksValue() + "$<br>"
 				+ "<b>Balance:</b> " + getBalance() + "$. <br><br>";
 
-		for (i = 0; i < portfolioSize; i++) {
+		for (int i = 0; i < portfolioSize; i++) {
 			getHtmlPortfolio += stocks[i].getHtmlDescription() + "<br>";
 		}
 		return getHtmlPortfolio;

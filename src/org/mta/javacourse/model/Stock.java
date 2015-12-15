@@ -2,13 +2,16 @@ package org.mta.javacourse.model;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import org.mta.javacourse.model.Portfolio.ALGO_RECOMMENDATION;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
  * An instance of this class represents a stock.
  * #Variables:
- * symbol(string), ask(int), bid(int), outputDate(Date), cal(Calendar), stockQuantity(int).
+ * symbol(string), ask(int), bid(int), outputDate(Date), cal(Calendar), stockQuantity(int), recommendation(ALGO_RECOMMENDATION).
  * 
  * #C'tors:
  * 1. public Stock() 
@@ -30,13 +33,8 @@ public class Stock {
 	private Date outputDate;
 	private Calendar cal;
 	private int stockQuantity = 0;
-
-	private static enum ALGO_RECOMMENDATION {
-		BUY, SELL, REMOVE, HOLD
-	};
-
 	private ALGO_RECOMMENDATION recommendation;
-
+	
 	/**
 	 * constructor
 	 * 
