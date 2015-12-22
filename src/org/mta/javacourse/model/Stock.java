@@ -3,7 +3,8 @@ package org.mta.javacourse.model;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.mta.javacourse.model.Portfolio.ALGO_RECOMMENDATION;
+import org.algo.model.StockInterface;
+import org.mta.javacourse.service.PortfolioManager.ALGO_RECOMMENDATION;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ import java.text.SimpleDateFormat;
  * @since 2015
  * @date 14/12/15
  */
-public class Stock {
+public class Stock implements StockInterface {
 	private String symbol;
 	private float ask;
 	private float bid;
@@ -60,9 +61,9 @@ public class Stock {
 	 * 
 	 * @param stock
 	 */
-	public Stock(Stock stock) {
-		this(stock.getSymbol(), stock.getAsk(), stock.getBid(), stock.getFormattedDate());
-		this.stockQuantity = stock.getStockQuantity();
+	public Stock(StockInterface stock) {
+		this(stock.getSymbol(), stock.getAsk(), stock.getBid(), ((Stock) stock).getFormattedDate());
+		this.stockQuantity = ((Stock) stock).getStockQuantity();
 	}
 
 	// getters
@@ -126,6 +127,10 @@ public class Stock {
 		cal.setTime(outputDate);
 	}
 
+	public void setDate(long time) {
+		this.outputDate = new Date(time * 1000);
+	}
+	
 	/**
 	 * quantity setter only updates to prevent misuse. add to stock
 	 * quantity(buying and selling stocks).
@@ -136,8 +141,8 @@ public class Stock {
 		this.stockQuantity += currentQuantity;
 	}
 
-	public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
-		this.recommendation = recommendation;
+	public void setRecommendation(ALGO_RECOMMENDATION algo_RECOMMENDATION) {
+		this.recommendation = algo_RECOMMENDATION;
 	}
 
 	// Methods
