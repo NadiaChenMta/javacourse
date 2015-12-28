@@ -141,9 +141,7 @@ public class PortfolioManager implements PortfolioManagerInterface {
 			
 			//first thing, add it to portfolio.
 			portfolio.addStock(stock);   
-			//or:
-			//portfolio.addStock(stock);   
-
+			
 			//second thing, save the new stock to the database.
 			datastoreService.saveStock(toDto(portfolio.findStock(symbol)));
 			
@@ -257,30 +255,50 @@ public class PortfolioManager implements PortfolioManagerInterface {
 	}
 
 	public void updateBalance(float value) throws PortfolioException {
-		// TODO Auto-generated method stub
+		Portfolio portfolio = (Portfolio) getPortfolio();
+		portfolio.updateBalance(value);
+		flush(portfolio);
 	}
 	
 	@Override
 	public void setTitle(String title) {
-		// TODO Auto-generated method stub
+		Portfolio portfolio = (Portfolio) getPortfolio();
+		portfolio.setTitle(title);
+		flush(portfolio);
 		
 	}
 
 	@Override
 	public void buyStock(String symbol, int quantity) throws PortfolioException {
-		// TODO Auto-generated method stub
-		
+		Portfolio portfolio = (Portfolio) getPortfolio();
+
+		Stock stock = (Stock) portfolio.findStock(symbol);
+		if (stock == null) {
+			try {
+				stock = fromDto(ServiceManager.marketService().getStock(symbol));
+			} catch (SymbolNotFoundInNasdaq e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		portfolio.buyStock(stock, quantity);
+		flush(portfolio);
 	}
 
 	@Override
 	public void sellStock(String symbol, int quantity) throws PortfolioException {
-		// TODO Auto-generated method stub
+		Portfolio portfolio = (Portfolio) getPortfolio();
+		portfolio.sellStock(symbol, quantity);
+		flush(portfolio);
 		
 	}
 
 	@Override
 	public void removeStock(String symbol) throws PortfolioException {
-		// TODO Auto-generated method stub
+		Portfolio portfolio = (Portfolio) getPortfolio();
+		portfolio.removeStock(symbol);
+		flush(portfolio);
 		
 	}	
 	

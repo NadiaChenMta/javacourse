@@ -32,7 +32,7 @@ public class Portfolio implements PortfolioInterface{
 	private float balance;
 	private StockInterface[] stocks;
 	private int portfolioSize;
-	//public enum ALGO_RECOMMENDATION {BUY, SELL, REMOVE, HOLD};
+	
 
 	/**
 	 * constructor
@@ -46,9 +46,11 @@ public class Portfolio implements PortfolioInterface{
 
 	public Portfolio(Stock[] stockArray) {
 		this.title = new String();
-		this.portfolioSize = getPortfolioSize();
-		this.balance = getBalance();
-		this.stocks = stockArray;
+		this.stocks = new Stock[MAX_PORTFOLIO_SIZE];
+		this.portfolioSize = stockArray.length;
+		for (int i = 0; i < portfolioSize; i++) {
+		this.stocks[i] = stockArray[i];
+		}
 	}
 	
 	/**
@@ -67,8 +69,6 @@ public class Portfolio implements PortfolioInterface{
 		}
 	}
 	
-	
-
 	// getters & setters
 	public String getTitle() {
 		return title;
@@ -118,9 +118,7 @@ public class Portfolio implements PortfolioInterface{
 	 * 
 	 * @param stock
 	 */
-	public void addStock(StockInterface stock) {
-		
-		
+	public void addStock(Stock stock) {
 		if (portfolioSize == MAX_PORTFOLIO_SIZE) {
 			System.out.println("Can't add new stock, portfolio can only have " + MAX_PORTFOLIO_SIZE + " stocks.");
 			return;
@@ -178,7 +176,7 @@ public class Portfolio implements PortfolioInterface{
 		}
 			
 		// Case 3: stock not in portfolio-add new.
-		addStock(stock);
+		addStock((Stock) stock);
 		
 		if (i == MAX_PORTFOLIO_SIZE) {
 			return false;

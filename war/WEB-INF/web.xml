@@ -7,7 +7,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 
 	<servlet>
 		<servlet-name>initServlet</servlet-name>
-		<servlet-class>com.mta.javacourse​.servlet.InitServlet</servlet-class>
+		<servlet-class>org.mta.javacourse.servlet.initServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 	
