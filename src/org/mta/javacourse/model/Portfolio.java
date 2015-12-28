@@ -46,10 +46,10 @@ public class Portfolio implements PortfolioInterface{
 
 	public Portfolio(Stock[] stockArray) {
 		this.title = new String();
-		this.stocks = new Stock[MAX_PORTFOLIO_SIZE];
+		this.stocks = new StockInterface[MAX_PORTFOLIO_SIZE];
 		this.portfolioSize = stockArray.length;
 		for (int i = 0; i < portfolioSize; i++) {
-		this.stocks[i] = stockArray[i];
+			this.stocks[i] = stockArray[i];
 		}
 	}
 	
@@ -119,6 +119,7 @@ public class Portfolio implements PortfolioInterface{
 	 * @param stock
 	 */
 	public void addStock(Stock stock) {
+
 		if (portfolioSize == MAX_PORTFOLIO_SIZE) {
 			System.out.println("Can't add new stock, portfolio can only have " + MAX_PORTFOLIO_SIZE + " stocks.");
 			return;

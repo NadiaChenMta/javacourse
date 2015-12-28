@@ -6,6 +6,7 @@ import java.util.Date;
 import org.algo.model.StockInterface;
 import org.mta.javacourse.service.PortfolioManager.ALGO_RECOMMENDATION;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -38,13 +39,22 @@ public class Stock implements StockInterface {
 	
 	/**
 	 * constructor
+	 */
+	public Stock() {
+		this.symbol = new String();
+		this.cal = Calendar.getInstance();
+		this.outputDate = new Date(); 
+		this.recommendation = ALGO_RECOMMENDATION.HOLD;		
+	}
+	/**
+	 * constructor
 	 * 
 	 * @param symbol
 	 * @param ask
 	 * @param bid
 	 * @param date- String input is changed to date type.
 	 */
-	public Stock(String symbol, float ask, float bid, String date) {
+	public Stock(String symbol, float ask, float bid, Date date) {
 		this.symbol = symbol;
 		this.ask = ask;
 		this.bid = bid;
@@ -55,14 +65,13 @@ public class Stock implements StockInterface {
 	}
 
 	/**
-	 * copy constructor. note:
-	 * date is formatted to String like in the default constructor input. 
-	 * default constructor doesn't have quantity input because only existing stocks have quantity.
+	 * copy constructor.
+	 * -default constructor doesn't have quantity input because only existing stocks have quantity.
 	 * 
 	 * @param stock
 	 */
 	public Stock(StockInterface stock) {
-		this(stock.getSymbol(), stock.getAsk(), stock.getBid(), ((Stock) stock).getFormattedDate());
+		this(stock.getSymbol(), stock.getAsk(), stock.getBid(), stock.getDate());
 		this.stockQuantity = ((Stock) stock).getStockQuantity();
 	}
 
@@ -117,14 +126,12 @@ public class Stock implements StockInterface {
 	 * 
 	 * @param inputDate
 	 */
-	public void setDate(String inputDate) {
-		SimpleDateFormat formatedDate = new SimpleDateFormat("MM/dd/yyyy");
-		try {
-			this.outputDate = formatedDate.parse(inputDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		cal.setTime(outputDate);
+	public void setDate(Date  inputDate) {
+		Date now = new Date();
+		this.outputDate = inputDate;		
+		this.cal.setTime(outputDate);
+		now = this.cal.getTime();
+		this.outputDate = now;
 	}
 
 	public void setDate(long time) {

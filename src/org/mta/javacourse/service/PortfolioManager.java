@@ -132,7 +132,7 @@ public class PortfolioManager implements PortfolioManagerInterface {
 	@Override
 	public void addStock(String symbol) {
 		Portfolio portfolio = (Portfolio) getPortfolio();
-
+	
 		try {
 			StockDto stockDto = ServiceManager.marketService().getStock(symbol);
 			
@@ -165,12 +165,12 @@ public class PortfolioManager implements PortfolioManagerInterface {
 	 * @return Stock
 	 */
 	private Stock fromDto(StockDto stockDto) {
-		Stock newStock = new Stock(null, 0, 0, null);
-
+		//Stock newStock = new Stock(null, 0, 0, null);
+		Stock newStock = new Stock();
 		newStock.setSymbol(stockDto.getSymbol());
 		newStock.setAsk(stockDto.getAsk());
 		newStock.setBid(stockDto.getBid());
-		newStock.setDate(stockDto.getDate().getTime());
+		newStock.setDate(stockDto.getDate());
 		newStock.updateStockQuantity(stockDto.getQuantity());
 		if(stockDto.getRecommendation() != null) newStock.setRecommendation(ALGO_RECOMMENDATION.valueOf(stockDto.getRecommendation()));
 
