@@ -1,5 +1,6 @@
 package org.mta.javacourse.service;
 
+import org.mta.javacourse.exception.*;
 import org.mta.javacourse.model.Portfolio;
 import org.mta.javacourse.model.Stock;
 
@@ -130,7 +131,7 @@ public class PortfolioManager implements PortfolioManagerInterface {
 	 * Add stock to portfolio 
 	 */
 	@Override
-	public void addStock(String symbol) {
+	public void addStock(String symbol) throws PortfolioFullException, StockAlreadyExistsException {
 		Portfolio portfolio = (Portfolio) getPortfolio();
 	
 		try {
@@ -140,8 +141,15 @@ public class PortfolioManager implements PortfolioManagerInterface {
 			Stock stock = fromDto(stockDto);
 			
 			//first thing, add it to portfolio.
-			portfolio.addStock(stock);   
-			
+			try {
+				portfolio.addStock(stock);
+			} catch (PortfolioFullException e) {
+				//e.getMessage();
+				throw e; // Propagation
+			} catch (StockAlreadyExistsException e) {
+				throw e; // Propagation
+			}   
+
 			//second thing, save the new stock to the database.
 			datastoreService.saveStock(toDto(portfolio.findStock(symbol)));
 			
@@ -165,7 +173,6 @@ public class PortfolioManager implements PortfolioManagerInterface {
 	 * @return Stock
 	 */
 	private Stock fromDto(StockDto stockDto) {
-		//Stock newStock = new Stock(null, 0, 0, null);
 		Stock newStock = new Stock();
 		newStock.setSymbol(stockDto.getSymbol());
 		newStock.setAsk(stockDto.getAsk());
@@ -256,7 +263,14 @@ public class PortfolioManager implements PortfolioManagerInterface {
 
 	public void updateBalance(float value) throws PortfolioException {
 		Portfolio portfolio = (Portfolio) getPortfolio();
-		portfolio.updateBalance(value);
+		try 
+		{
+			portfolio.updateBalance(value);
+		} 
+		catch (BalanceException e) 
+		{
+			throw e; // Propagation
+		}
 		flush(portfolio);
 	}
 	
@@ -277,27 +291,39 @@ public class PortfolioManager implements PortfolioManagerInterface {
 			try {
 				stock = fromDto(ServiceManager.marketService().getStock(symbol));
 			} catch (SymbolNotFoundInNasdaq e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
-		portfolio.buyStock(stock, quantity);
+		try {
+			portfolio.buyStock(stock, quantity);
+		} catch (PortfolioException e) {
+			throw e;
+		}
 		flush(portfolio);
 	}
 
 	@Override
 	public void sellStock(String symbol, int quantity) throws PortfolioException {
 		Portfolio portfolio = (Portfolio) getPortfolio();
-		portfolio.sellStock(symbol, quantity);
+		
+		try {
+			portfolio.sellStock(symbol, quantity);
+		} catch (PortfolioException e) {
+			throw e;
+		}
 		flush(portfolio);
 		
 	}
 
 	@Override
-	public void removeStock(String symbol) throws PortfolioException {
+	public void removeStock(String symbol) throws PortfolioException{
 		Portfolio portfolio = (Portfolio) getPortfolio();
-		portfolio.removeStock(symbol);
+		try {
+			portfolio.removeStock(symbol);
+		} catch (PortfolioException e) {
+			throw e;
+		} 
 		flush(portfolio);
 		
 	}	

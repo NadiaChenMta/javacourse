@@ -6,8 +6,6 @@ import java.util.Date;
 import org.algo.model.StockInterface;
 import org.mta.javacourse.service.PortfolioManager.ALGO_RECOMMENDATION;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -52,21 +50,20 @@ public class Stock implements StockInterface {
 	 * @param symbol
 	 * @param ask
 	 * @param bid
-	 * @param date- String input is changed to date type.
+	 * @param date
 	 */
 	public Stock(String symbol, float ask, float bid, Date date) {
 		this.symbol = symbol;
 		this.ask = ask;
 		this.bid = bid;
 		// date is immutable, so it must be created anew.
-		outputDate = new Date();
+		//outputDate = new Date();
 		cal = Calendar.getInstance();
 		setDate(date);
 	}
 
 	/**
 	 * copy constructor.
-	 * -default constructor doesn't have quantity input because only existing stocks have quantity.
 	 * 
 	 * @param stock
 	 */
@@ -121,11 +118,7 @@ public class Stock implements StockInterface {
 		}
 	}
 
-	/**
-	 * date setter needs to convert String to date type.
-	 * 
-	 * @param inputDate
-	 */
+	
 	public void setDate(Date  inputDate) {
 		Date now = new Date();
 		this.outputDate = inputDate;		
